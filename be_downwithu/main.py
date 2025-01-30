@@ -1,15 +1,13 @@
 from fastapi import FastAPI, Query, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import StreamingResponse
 import yt_dlp
 import os
+import subprocess
 
 app = FastAPI()
 
-def download_audio(url: str, output_dir: str = "downloads") -> str:
+def stream_audio(url: str):
     try:
-        # Ensure the output directory exists
-        os.makedirs(output_dir, exist_ok=True)
-
         # Options for yt-dlp
         ydl_opts = {
             'format': 'bestaudio/best',  # Download the best quality audio
@@ -18,26 +16,41 @@ def download_audio(url: str, output_dir: str = "downloads") -> str:
                 'preferredcodec': 'mp3',
                 'preferredquality': '192',
             }],
-            'outtmpl': f'{output_dir}/%(title)s.%(ext)s',  # Output file template
-            'noplaylist': True,  # Download only the single video, not the playlist
+            'outtmpl': '-',  # Stream to stdout instead of saving to a file
         }
 
-        # Download the audio and get the file path
+        # Use yt-dlp to extract and stream the audio
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info_dict = ydl.extract_info(url, download=True)  # Extract video info
-            file_path = ydl.prepare_filename(info_dict)  # Get the downloaded file path
-            return file_path.replace(".webm", ".mp3")  # Replace extension for MP3
+            # Extract video info
+            info_dict = ydl.extract_info(url, download=False)
+            audio_url = info_dict['url']  # Get the direct audio stream URL
+
+            # Use FFmpeg to convert and stream the audio
+            ffmpeg_command = [
+                'ffmpeg',
+                '-i', audio_url,  # Input URL
+                '-f', 'mp3',     # Output format
+                '-'              # Stream to stdout
+            ]
+
+            # Start FFmpeg process
+            process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            # Stream the output to the client
+            return StreamingResponse(
+                process.stdout,
+                media_type="audio/mpeg",
+                headers={
+                    "Content-Disposition": f"attachment; filename={info_dict['title']}.mp3"
+                }
+            )
 
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error downloading audio: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Error streaming audio: {str(e)}")
 
 @app.get("/download_audio/")
 async def download_youtube_audio(url: str = Query(..., description="The YouTube video URL")):
-    # Download the audio file
-    audio_file_path = download_audio(url)
-
-    # Return the file as a response
-    return FileResponse(audio_file_path, media_type="audio/mpeg", filename=os.path.basename(audio_file_path))
+    return stream_audio(url)
 
 # Run the app with Uvicorn
 if __name__ == "__main__":
