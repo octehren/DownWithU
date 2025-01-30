@@ -21,6 +21,8 @@ venv
 docs.zip
 archive.zip
 .venv
+downloads
+testinn.py
 
 # vim temporary files
 *~
