@@ -53,7 +53,7 @@ python -m venv .venv && source .venv/bin/activate
 # Optional: setup direnv. See: https://dev.to/otamm/one-environment-per-project-manage-directory-scoped-envs-with-direnv-in-posix-systems-4n3c
 touch .envrc && echo 'export VIRTUAL_ENV=."venv" && layout python' >> .envrc && direnv allow
 # installs packages to venv context
-python -m pip install "fastapi[standard]" yt-dlp
+pip install -r requirements.txt # OR $ python -m pip install fastapi uvicorn yt-dlp
 # writes libraries and versions to a reusable file
 pip freeze > requirements.txt 
 ```
