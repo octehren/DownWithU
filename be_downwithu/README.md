@@ -11,7 +11,7 @@ docker build -t downwithu . && docker run -p 8000:8000 downwithu
 
 If you need to inspect the container:
 ```bash
-docker exec -it downwithu /bin/sh
+docker exec -it $(docker ps --filter "ancestor=downwithu" --format "{{.Names}}") /bin/sh
 ```
 
 ## Example uses (Back-End)
