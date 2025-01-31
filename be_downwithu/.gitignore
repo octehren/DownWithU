@@ -23,7 +23,7 @@ archive.zip
 .venv
 downloads
 testinn.py
-
+backup_requirements.txt
 # vim temporary files
 *~
 .*.sw?
