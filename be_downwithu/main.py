@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import StreamingResponse
 import yt_dlp
-import os
 import subprocess
 
 app = FastAPI()
@@ -48,7 +47,7 @@ def stream_audio(url: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error streaming audio: {str(e)}")
 
-@app.get("/download_audio/")
+@app.get("/download_audio")
 async def download_youtube_audio(url: str = Query(..., description="The YouTube video URL")):
     return stream_audio(url)
 
