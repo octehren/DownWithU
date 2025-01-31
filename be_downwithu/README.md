@@ -21,6 +21,21 @@ docker exec -it $(docker ps --filter "ancestor=downwithu" --format "{{.Names}}")
 - Example 2 ("I Love Beijing Tiananmen"): `http://127.0.0.1:8000/download_audio?url=https://www.youtube.com/watch?v=mJmjljQP3oY`
 - Example 3, shortest one (Linux Startup Sound): `http://127.0.0.1:8000/download_audio?url=https://www.youtube.com/watch?v=rnbX7VUvxGU`
 
+## Updating
+
+Sometimes Youtube might update the website and make this package's functionality break.
+To update the main dependency that enables the download, run:
+
+```bash
+bash self_update.sh
+```
+
+This will update `yt-dlp` and then overwrite `requirements.txt` with the new version.
+This should probably be put into a cron job or something to guarantee an always up to date service.
+
+
+**NOTE**: It might include extra packages in `requirements.txt` if you had more dependencies installed.
+
 ## Back-End Setup
 
 First, install `ffmpeg`.
@@ -52,20 +67,6 @@ fastapi run # prod mode
 fastapi run --reload # dev mode
 ```
 
-## Updating
-
-Sometimes Youtube might update the website and make this package's functionality break.
-To update the main dependency that enables the download, run:
-
-```bash
-bash self_update.sh
-```
-
-This will update `yt-dlp` and then overwrite `requirements.txt` with the new version.
-This should probably be put into a cron job or something to guarantee an always up to date service.
-
-**NOTE**: it won't automatically self-update as of no
-
 ## Testing
 
 If you wish to test locally:
@@ -86,3 +87,5 @@ Testing the self-updater script:
 ```bash
 bash test_self_update.sh
 ```
+
+**NOTE**: It might include extra packages in `requirements.txt` if you had more dependencies installed.
