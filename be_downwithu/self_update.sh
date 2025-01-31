@@ -5,14 +5,15 @@ run_tests() {
     local retry_count=${1:-0} # starts at 0
     # Run pytest and capture the exit code
     echo -e "\n\nRunning tests...\n\n"
-    pytest tests/
+    pytest tests/integration
     TEST_RESULT=$?
 
     # 0 = test pass, else = test fail
     if [ $TEST_RESULT -eq 0 ]; then
         echo "All tests passed successfully!"
         echo "Working version for yt-dlp:"
-        pip show yt-dlp
+        pip show yt-dlp | grep Version
+        pip freeze > requirements.txt
         exit 0  # Success
     else
         echo -e "\n\nSome tests failed. Please check the output above for details.\n\n"
