@@ -30,6 +30,15 @@ python -m pip install "fastapi[standard]" yt-dlp
 pip freeze > requirements.txt 
 ```
 
+## Running App
+
+Use this commands from the same directory level as `pyproject.toml`:
+
+```bash
+fastapi run # prod mode
+fastapi run --reload # dev mode
+```
+
 
 ## Testing
 

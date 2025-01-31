@@ -1,0 +1,2 @@
+[tool.fastapi]
+app = "app.main:app"
