@@ -1,6 +1,14 @@
 # DownWithU Back-End
 Youtube downloader. Uses yt-dlp.
 
+## Quickstart
+
+Run with docker:
+
+```bash
+docker build -t downwithu . && docker run -p 8000:8000 downwithu
+```
+
 ## Example uses (Back-End)
 **Note**: These examples assume the Back-end is running locally on port `8000`. The pieces of content used as examples are all copyright-free material.
 
