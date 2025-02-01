@@ -63,6 +63,10 @@ pip freeze > requirements.txt
 Use this commands from the same directory level as `pyproject.toml`:
 
 ```bash
+# uvicorn command
+uvicorn app.main:app --host 0.0.0.0 --port 8000 # prod mode
+uvicorn app.main:app --host 0.0.0.0 --port 8000 ---reload # dev mode
+# fastapi command
 fastapi run # prod mode
 fastapi run --reload # dev mode
 ```
